@@ -35,7 +35,6 @@ sub new {
                         'cpu'           => 'network::a10::mode::cpu',
                         'storage'       => 'network::a10::mode::storage',
                         'memory'        => 'network::a10::mode::memory',
-                        'connections'   => 'network::a10::mode::connections',
                         'sessions'      => 'network::a10::mode::sessions',
                         'temperature'   => 'network::a10::mode::temperature',
                         'hardware'      => 'network::a10::mode::hardware',
