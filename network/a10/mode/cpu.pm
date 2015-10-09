@@ -37,7 +37,6 @@ sub new {
                 "warning:s"       => { name => 'warning', },
                 "critical:s"      => { name => 'critical', },
             });
-    }
 
     return $self;
 }
@@ -63,7 +62,7 @@ sub run {
 
     my $oid_axSysAverageCpuUsage = '.1.3.6.1.4.1.22610.2.4.1.3.3.0';
     my $oid_axSysAverageControlCpuUsage = '.1.3.6.1.4.1.22610.2.4.1.3.4.0';
-    my $oid_axSysAverageDataCpuUsage = '.1.3.6.1.4.1.22610.2.4.1.3.5.0',
+    my $oid_axSysAverageDataCpuUsage = '.1.3.6.1.4.1.22610.2.4.1.3.5.0';
 
     my $result = $self->{snmp}->get_leef(oids => [$oid_axSysAverageCpuUsage, $oid_axSysAverageControlCpuUsage, $oid_axSysAverageDataCpuUsage], nothing_quit => 1);
 
