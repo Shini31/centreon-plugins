@@ -32,7 +32,7 @@ my %map_psu_status = (
 );
 
 my $mapping = {
-    asSysXPowerSupplyStatus => { map => \%map_fan_status },
+    asSysXPowerSupplyStatus => { map => \%map_psu_status },
 };
 
 my $oid_axSysLowerPowerSupplyStatus = '.1.3.6.1.4.1.22610.2.4.1.5.7.0';
@@ -52,7 +52,7 @@ sub check {
     $self->{components}->{psu} = {name => 'psus', total => 0, skip => 0};
     return if ($self->check_exclude(section => 'psu'));
 
-    foreach my $oid (keys %{$self->{results}->{$oid_axSysLowerPowerSupplyStatus}}) {
+    foreach my $oid ($self->{snmp}->oid_lex_sort(keys %{$self->{results}->{$oid_axSysLowerPowerSupplyStatus}})) {
         my $instance = 'Lower';
         my $result = $self->{snmp}->map_instance(mapping => $mapping, results => $self->{results}->{$oid_axSysLowerPowerSupplyStatus}, instance => $instance);
         next if ($self->check_exclude(section => 'psu', instance => $instance));

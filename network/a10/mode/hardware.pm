@@ -24,6 +24,7 @@ use base qw(centreon::plugins::mode);
 
 use strict;
 use warnings;
+use Data::Dumper;
 
 my $thresholds = {
     fan => [
@@ -94,22 +95,29 @@ sub run {
     $self->{snmp} = $options{snmp};
 
     my $snmp_request = [];
+    my $snmp_request2 = [];
     my @components = ('fan', 'psu');
     foreach (@components) {
         if (/$self->{option_results}->{component}/) {
-            my $mod_name = "network:a10::mode::components::$_";
+            my $mod_name = "network::a10::mode::components::$_";
             centreon::plugins::misc::mymodule_load(output => $self->{output}, module => $mod_name,
                                                    error_msg => "Cannot load module '$mod_name'.");
             my $func = $mod_name->can('load');
-            $func->(request => $snmp_request);
+            if ($_ eq 'psu') {
+                $func->(request => $snmp_request2);
+            } else {
+                $func->(request => $snmp_request);
+            }
         }
     }
 
-    if (scalar(@{$snmp_request}) == 0) {
+    if (scalar(@{$snmp_request}) == 0 || scalar(@{$snmp_request2}) == 0) {
         $self->{output}->add_option_msg(short_msg => "Wrong option. Cannot find component '" . $self->{option_results}->{component} . "'.");
         $self->{output}->option_exit();
     }
+
     $self->{results} = $self->{snmp}->get_multiple_table(oids => $snmp_request);
+    $self->{results} = $self->{snmp}->get_leef(oids => $snmp_request2);
 
     foreach (@components) {
         if (/$self->{option_results}->{component}/) {
@@ -202,7 +210,7 @@ Can be: 'fan', 'psu', 'module'.
 =item B<--exclude>
 
 Exclude some parts (comma seperated list) (Example: --exclude=fan,psu)
-Can also exclude specific instance: --exclude=fan#Upper#Lower#,psu
+Can also exclude specific instance: --exclude=fan,psu#Upper#
 
 =item B<--no-component>
 
