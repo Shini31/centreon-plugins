@@ -32,12 +32,14 @@ sub new {
 
     $self->{version} = '1.0';
     %{$self->{modes}} = (
-                        'cpu'           => 'network::a10::mode::cpu',
-                        'storage'       => 'network::a10::mode::storage',
-                        'memory'        => 'network::a10::mode::memory',
-                        'sessions'      => 'network::a10::mode::sessions',
-                        'temperature'   => 'network::a10::mode::temperature',
-                        'hardware'      => 'network::a10::mode::hardware',
+                        'cpu'               => 'network::a10::mode::cpu',
+                        'storage'           => 'network::a10::mode::storage',
+                        'memory'            => 'network::a10::mode::memory',
+                        'sessions'          => 'network::a10::mode::sessions',
+                        'temperature'       => 'network::a10::mode::temperature',
+                        'hardware'          => 'network::a10::mode::hardware',
+                        'interfaces'        => 'snmp_standard::mode::interfaces',
+                        'list-interfaces'   => 'snmp_standard::mode::listinterfaces',
                         );
 
     return $self;
