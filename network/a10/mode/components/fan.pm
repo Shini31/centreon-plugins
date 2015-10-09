@@ -36,7 +36,7 @@ my %map_fan_status = (
 my $mapping = {
     axFanStatus => { oid => '.1.3.6.1.4.1.22610.2.4.1.5.9.1.3', map => \%map_fan_status },
 };
-my $oid_AxSysFanStatusEntry = '.1.3.6.1.4.1.22610.2.4.1.5.9.1.0';
+my $oid_AxSysFanStatusEntry = '.1.3.6.1.4.1.22610.2.4.1.5.9.1';
 
 sub load {
     my (%options) = @_;
