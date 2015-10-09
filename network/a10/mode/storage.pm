@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-package network::a10::mode::memory;
+package network::a10::mode::storage;
 
 use base qw(centreon::plugins::mode);
 
@@ -64,25 +64,25 @@ sub run {
 
     my $result = $self->{snmp}->get_leef(oids => [$oid_axSysDiskFreeSpace, $oid_axSysDiskTotalSpace],
                                          nothing_quit => 1);
-    my $mem_free = ($result->{$oid_axSysDiskFreeSpace} * 1024) * 1024;
-    my $mem_total = ($result->{$oid_axSysDiskTotalSpace} * 1024) * 1024;
-    my $mem_used = $mem_total - $mem_free;
+    my $disk_free = ($result->{$oid_axSysDiskFreeSpace} * 1024) * 1024;
+    my $disk_total = ($result->{$oid_axSysDiskTotalSpace} * 1024) * 1024;
+    my $disk_used = $disk_total - $disk_free;
 
-    my $mem_percent_used = ($mem_used / $mem_total) * 100;
+    my $disk_percent_used = ($disk_used / $disk_total) * 100;
 
-    my $exit = $self->{perfdata}->threshold_check(value => $mem_percent_used, threshold => [ { label => 'critical', exit_litteral => 'critical' }, { label => 'warning', exit_litteral => 'warning' } ]);
+    my $exit = $self->{perfdata}->threshold_check(value => $disk_percent_used, threshold => [ { label => 'critical', exit_litteral => 'critical' }, { label => 'warning', exit_litteral => 'warning' } ]);
 
-    my ($mem_used_value, $mem_used_unit) = $self->{perfdata}->change_bytes(value => $mem_used);
+    my ($disk_used_value, $disk_used_unit) = $self->{perfdata}->change_bytes(value => $disk_used);
 
     $self->{output}->output_add(severity => $exit,
-                                short_msg => sprintf("Memory used %s (%.2f%%)", 
-                                $mem_used_value . " " . $mem_used_unit, $mem_percent_used));
+                                short_msg => sprintf("Storage used %s (%.2f%%)",
+                                $disk_used_value . " " . $disk_used_unit, $disk_percent_used));
 
     $self->{output}->perfdata_add(label => "used", unit => 'B',
-                                  value => $mem_used,
-                                  warning => $self->{perfdata}->get_perfdata_for_output(label => 'warning', total => $mem_total, cast_int => 1),
-                                  critical => $self->{perfdata}->get_perfdata_for_output(label => 'critical', total => $mem_total, cast_int => 1),
-                                  min => 0, max => $mem_total,
+                                  value => $disk_used,
+                                  warning => $self->{perfdata}->get_perfdata_for_output(label => 'warning', total => $disk_total, cast_int => 1),
+                                  critical => $self->{perfdata}->get_perfdata_for_output(label => 'critical', total => $disk_total, cast_int => 1),
+                                  min => 0, max => $disk_total,
                                   );
 
     $self->{output}->display();
